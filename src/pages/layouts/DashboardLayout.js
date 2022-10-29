@@ -1,11 +1,15 @@
 import {AppBar, Toolbar, Box, Typography, IconButton, Container, Avatar, Drawer, List, ListItem, ListItemButton, ListItemText,
-        ListItemIcon, Collapse, Popover, MenuItem as MenuItemMui} from '@mui/material';
+        ListItemIcon, Collapse, Popover, MenuItem as MenuItemMui, Divider} from '@mui/material';
 import  React, { useState, useEffect, useRef} from 'react';
 import { Outlet, useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { drawerMenu, popMenu } from '../../constants/menu.js';
 import MenuIcon from "@mui/icons-material/Menu";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useDispatch, useSelector } from 'react-redux';
+import { appSelector, appActions } from '../../redux/appRedux.js';
+import { Stack } from '@mui/system';
+
 
 
 const drawerWidth = 280
@@ -122,36 +126,38 @@ const PopMenu = () => {
     const [open, setOpen] = useState(false)
     return(
         <Box>
-        <IconButton
-        size="small"
-        sx={{ ml: 2 }}
-        onClick={()=>setOpen(true)}
-        ref={menuRef}
-        >
-        <Avatar sx={{ color:'red', width: 32, height: 32 }}>M</Avatar>
-        </IconButton>
-        <MenuPopover open={open} onClose={()=>setOpen(false)}
-        anchorEl={menuRef.current} sx={{marginTop: 2.5, marginLeft: 0.5,
-        overflow:'inherit', boxShadow:'1px, 1px, 2px, 2px rgb(0 0 0 / 20%)',
-        width: 320}} >
-        {popMenu.map(item=>(
-        <MenuItemMui key={item.title} to={item.path}
-        component={RouterLink} onClick={()=>setOpen(false)} sx={{py:1, px:2.5}}
-        >
-        <ListItemText disableTypography>{item.title}</ListItemText>
-        </MenuItemMui>
-        ))}
-        </MenuPopover>
+            <IconButton
+                size="small"
+                sx={{ ml: 2 }}
+                onClick={()=>setOpen(true)}
+                ref={menuRef}
+                >
+                <Avatar sx={{ color:'red', width: 32, height: 32 }}>M</Avatar>
+            </IconButton>
+            <MenuPopover open={open} onClose={()=>setOpen(false)}
+                anchorEl={menuRef.current} sx={{marginTop: 2.5, marginLeft: 0.5,
+                overflow:'inherit', boxShadow:'1px, 1px, 2px, 2px rgb(0 0 0 / 20%)',
+                width: 320}} >
+                {popMenu.map(item=>(
+                <MenuItemMui key={item.title} to={item.path}
+                component={RouterLink} onClick={()=>setOpen(false)} sx={{py:1, px:2.5}}
+                >
+                <ListItemText disableTypography>{item.title}</ListItemText>
+                </MenuItemMui>
+                ))}
+            </MenuPopover>
         </Box>
     )
 }
 
 const DashboardLayout = ()=>{
 
+    const dispatch = useDispatch();
+    const pageTitle = useSelector(appSelector.pageTitle)
     const [open, setOpen] = useState(false)
 
     return (
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ justifyContent: 'space-between' }}>
             <AppBar position="absolute" sx={{bgcolor:'text.primary' }}>
                 <Toolbar
                 sx={{
@@ -161,20 +167,34 @@ const DashboardLayout = ()=>{
                 <Box px={2} sx={{cursor:'pointer'}}>
                     <MenuIcon sx={{color:'red'}} onClick={()=>setOpen(true)} />
                 </Box>
+            
                 <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                sx={{ flexGrow: 1 }}
-                >
-                Pilar Tecno Web
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                    >
+                    Pilar Tecno Web
                 </Typography>
+                <Divider orientation='vertical' variant='middle' flexItem sx={{ ml: 2, mr:1 }}/>    
+                <Typography
+                    component="h1"
+                    variant="h6"
+                    color="red"
+                    noWrap
+                    sx={{ flexGrow: 1 }}
+                    >
+                    {pageTitle}
+                </Typography>
+               
+
+                <Divider orientation='vertical' variant='middle' flexItem/>
+
                 <PopMenu/>
                 </Toolbar>
             </AppBar>
             <SideMenu open={open} onClose={()=>setOpen(false)}/>
-            <Box
+            <Box 
                 component="main"
                 sx={{
                 backgroundColor: (theme) =>
@@ -185,7 +205,7 @@ const DashboardLayout = ()=>{
                 height: '100vh',
                 overflow: 'auto',
                 }}
-            >
+                >
                 <Toolbar />
                 <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Outlet/>
