@@ -5,18 +5,20 @@ const ADD_TODO = "ADD_TODO";
 const COMPLETE_TODO = "COMPLETE_TODO";
 const DELETE_TODO = "DELETE_TODO";
 const SET_PAGE_NAME = "SET_PAGE_NAME";
-
+const SET_LOADING = "SET_LOADING";
 
 //state inicial valor inicial de las variables a las que queremos acceder globalmente.
 const stateInitial = {
     pageTitle: '',
+    loading: false,
     todo: [],
     }
 
 //Selectores selector para poder acceder al estado desde cualquier componente.
 export const appSelector = {
     todo: (state) => state.todo,
-    pageTitle: (state) => state.pageTitle
+    pageTitle: (state) => state.pageTitle,
+    loading: (state) => state.loading
     }
 
 //Actions estas funciones ejecuta el bloque de código de alguno de los reducers que coincida con el type del action.
@@ -24,6 +26,10 @@ export const appActions = {
     setPageTitle: (title) => ({
         type: SET_PAGE_NAME,
         title, 
+    }),
+    setLoading: (payload) => ({
+        type: SET_LOADING,
+        payload, 
     }),
     addTodo: (payload) => ({
         type: ADD_TODO,
@@ -39,6 +45,8 @@ export const appActions = {
     })
         
 }
+
+
 //Reducer
 export const appReducer = (state = stateInitial, action) => {
     switch(action.type){
@@ -47,6 +55,11 @@ export const appReducer = (state = stateInitial, action) => {
                 ...state,
                 pageTitle: action.title
             }
+        case SET_LOADING:
+                return{
+                    ...state,
+                    loading: action.payload
+                }
         case ADD_TODO:
             return{
                 ...state,

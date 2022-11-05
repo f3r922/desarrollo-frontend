@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useDispatch, useSelector } from 'react-redux';
 import { appSelector, appActions } from '../../redux/appRedux.js';
-import { Stack } from '@mui/system';
+import Loading from '../../components/Loading.js';
 
 
 
@@ -157,6 +157,7 @@ const DashboardLayout = ()=>{
     const [open, setOpen] = useState(false)
 
     return (
+        <>
         <Box sx={{ justifyContent: 'space-between' }}>
             <AppBar position="absolute" sx={{bgcolor:'text.primary' }}>
                 <Toolbar
@@ -212,6 +213,8 @@ const DashboardLayout = ()=>{
                 </Container>
             </Box>
         </Box>
+        <Loading/>
+        </>
     )
 }
 
